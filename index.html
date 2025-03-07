@@ -145,30 +145,33 @@
             appendMessage("user", message);
             userInput.value = "";
 
-            fetch("/chat", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ message: message })
-            })
-            .then(response => response.json())
-            .then(data => {
-                appendMessage("bot", data.response);
-            });
-        }
+            fetch("https://rmwai.onrender.com/chat", {  // Change to Render backend URL
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ message: message })
+})
+.then(response => response.json())
+.then(data => {
+    appendMessage("bot", data.response);
+})
+.catch(error => {
+    appendMessage("bot", "Error: Unable to connect to server.");
+    console.error("Fetch Error:", error);
+});
+
 
         function generateReport() {
             appendMessage("bot", "Generating report...");
 
-            fetch("/generate_report", { method: "POST" })
-            .then(response => response.json())
-            .then(data => {
-                const formattedReport = formatReport(data.summary);
-                appendMessage("bot", formattedReport, true);
-            })
-            .catch(error => {
-                appendMessage("bot", "Error generating report.");
-            });
-        }
+            fetch("https://rmwai.onrender.com/generate_report", { method: "POST" })
+.then(response => response.json())
+.then(data => {
+    appendMessage("bot", formatReport(data.summary), true);
+})
+.catch(error => {
+    appendMessage("bot", "Error generating report.");
+});
+
 
         // ✅ Function to format the response properly
         function formatReport(reportText) {
@@ -199,12 +202,12 @@
 
 
         function startNewChat() {
-            fetch("/new_chat", { method: "POST" })
-            .then(() => {
-                chatBox.innerHTML = "";
-                appendMessage("bot", "Hello, how can I be of assistance today?");
-            });
-        }
+            fetch("https://rmwai.onrender.com/new_chat", { method: "POST" })
+.then(() => {
+    chatBox.innerHTML = "";
+    appendMessage("bot", "Hello, how can I assist you today?");
+});
+
 
         // ✅ Ensures the bot's greeting appears immediately after the page loads
         document.addEventListener("DOMContentLoaded", function () {
